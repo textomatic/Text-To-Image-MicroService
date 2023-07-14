@@ -1,8 +1,17 @@
-from diffusers import StableDiffusionPipeline
-import torch
+from fastapi import FastAPI
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+from fastapi.responses import FileResponse
 
-model_id = "prompthero/openjourney-v4"
+app = FastAPI()
+
+model_id = "stabilityai/stable-diffusion-2-1"
 pipe = StableDiffusionPipeline.from_pretrained(model_id)
-prompt = "retro serie of different cars with different colors and shapes, mdjrny-v4 style"
-image = pipe(prompt, num_inference_steps=1).images[0]
-#image.save("retro_cars.png")
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+pipe = pipe.to("cuda")
+
+@app.get("/vector_image")
+def image_endpoint(prompt):
+
+    image = pipe(prompt, num_inference_steps=10).images[0]
+    image.save("image.png")
+    return FileResponse("image.png")
