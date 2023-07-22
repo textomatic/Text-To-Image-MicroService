@@ -10,11 +10,11 @@ app = FastAPI()
 model_id = "stabilityai/stable-diffusion-2-1"
 
 # Model Pipeline Initialization
-pipe = StableDiffusionPipeline.from_pretrained(model_id)
+# pipe = StableDiffusionPipeline.from_pretrained(model_id)
 
 # Model Pipeline Configuration
-pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-pipe = pipe.to("cuda")
+# pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+# pipe = pipe.to("cuda")
 
 # API Endpoint
 @app.get("/vector_image")
@@ -30,9 +30,18 @@ def image_endpoint(prompt):
     """
 
     # Generate Image
-    image = pipe(prompt, num_inference_steps=10).images[0]
+    # image = pipe(prompt, num_inference_steps=10).images[0]
 
-    # Save Image
-    image.save("image.png")
+    # # Save Image
+    # image.save("image.png")
     
-    return FileResponse("image.png")
+    # return FileResponse("image.png")
+    return {"msg": "Hello World"}
+
+@app.get("/health_check")
+def health_check():
+    """
+    This endpoint is a health check for the API.
+    """
+
+    return {"msg": "Hello World"}
