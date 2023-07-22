@@ -9,7 +9,7 @@ pydantic==2.0.2
 pydantic_core==2.1.2
 requests==2.31.0
 tokenizers==0.13.3
-torch==2.0.1
+torch==2.0.1+cpu
 torchvision==0.15.2
 transformers==4.30.2
 urllib3==1.26.6

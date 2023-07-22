@@ -10,15 +10,15 @@ app = FastAPI()
 model_id = "stabilityai/stable-diffusion-2-1"
 
 # Model Pipeline Initialization
-# pipe = StableDiffusionPipeline.from_pretrained(model_id)
+pipe = StableDiffusionPipeline.from_pretrained(model_id)
 
 # Model Pipeline Configuration
-# pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 # pipe = pipe.to("cuda")
 
 # API Endpoint
 @app.get("/vector_image")
-def image_endpoint(prompt):
+def image_endpoint(prompt, num_inference_steps: int = 10):
     """
     This endpoint takes a text prompt as input and returns an image.
 
@@ -30,13 +30,12 @@ def image_endpoint(prompt):
     """
 
     # Generate Image
-    # image = pipe(prompt, num_inference_steps=10).images[0]
+    image = pipe(prompt, num_inference_steps=num_inference_steps).images[0]
 
-    # # Save Image
-    # image.save("image.png")
+    # Save Image
+    image.save("image.png")
     
-    # return FileResponse("image.png")
-    return {"msg": "Hello World"}
+    return FileResponse("image.png")
 
 @app.get("/health_check")
 def health_check():
