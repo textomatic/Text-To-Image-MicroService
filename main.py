@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 from fastapi.responses import FileResponse
+import logging
 
 # App Definition
 app = FastAPI()
@@ -10,15 +11,17 @@ app = FastAPI()
 model_id = "stabilityai/stable-diffusion-2-1"
 
 # Model Pipeline Initialization
+logging.info("Initializing Model Pipeline")
 pipe = StableDiffusionPipeline.from_pretrained(model_id)
 
 # Model Pipeline Configuration
+logging.info("Configuring Model Pipeline")
 pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 # pipe = pipe.to("cuda")
 
 # API Endpoint
 @app.get("/vector_image")
-def image_endpoint(prompt, num_inference_steps: int = 10):
+def image_endpoint(prompt, num_inference_steps: int = 3):
     """
     This endpoint takes a text prompt as input and returns an image.
 
@@ -30,9 +33,11 @@ def image_endpoint(prompt, num_inference_steps: int = 10):
     """
 
     # Generate Image
+    logging.info("Generating Image")
     image = pipe(prompt, num_inference_steps=num_inference_steps).images[0]
 
     # Save Image
+    logging.info("Saving Image")
     image.save("image.png")
     
     return FileResponse("image.png")
